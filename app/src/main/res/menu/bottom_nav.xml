@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Home"
+        android:icon="@drawable/outline_home_24"
+        android:id="@+id/iHome"
+
+        />
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Supervision"
+        android:icon="@drawable/outline_remove_red_eye_24"
+        android:id="@+id/iFriends"/>
+
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Classification"
+        android:icon="@drawable/outline_bar_chart_24"
+        android:id="@+id/iGroup"/>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Action"
+        android:icon="@drawable/outline_flash_on_24"
+        android:id="@+id/iProfile"
+        />
+</menu>
