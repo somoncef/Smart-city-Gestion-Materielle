@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,6 +42,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/card"
                 >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -49,9 +51,35 @@
                     android:padding="10dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
                         android:layout_height="100dp"
+                        android:contentDescription="supervision_logo"
                         android:src="@drawable/supervision_logo" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Supervision"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="Gérer les lampadaires"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
                 </LinearLayout>
 
 
