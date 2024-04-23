@@ -18,12 +18,13 @@ public class MainActivity extends AppCompatActivity {
     Fragment classificationFragment = new Classification();
     Fragment actionFragment = new Action();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Add this line to launch the Home fragment at first launch
+        getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, homeFragment).commit();
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setItemIconTintList(null);
