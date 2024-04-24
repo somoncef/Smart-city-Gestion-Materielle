@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "989744559808",
+    "project_id": "gestion-materielle-hackathon",
+    "storage_bucket": "gestion-materielle-hackathon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989744559808:android:448001dc7e0e57712c1f25",
+        "android_client_info": {
+          "package_name": "com.example.gestion_materielle_hackathon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7jb2SkIX0MtmYPGhIJXC24eZzHrZOlt4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
