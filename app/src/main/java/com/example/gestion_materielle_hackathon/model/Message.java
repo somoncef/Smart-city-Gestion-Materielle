@@ -2,7 +2,7 @@ package com.example.gestion_materielle_hackathon.model;
 
 public class Message {
     public static String SENT_BY_ME="me";
-    public static String SENT_BY_BOT="me";
+    public static String SENT_BY_BOT="bot";
     String message;
     String sentBy;
 
