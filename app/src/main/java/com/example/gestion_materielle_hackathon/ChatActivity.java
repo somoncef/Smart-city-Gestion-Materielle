@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -40,10 +43,14 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton sendButton;
     List<Message> messageList;
     MessageAdapter messageAdapter;
+
+    private boolean isBotTyping = false;
+
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
-    OkHttpClient client = new OkHttpClient();
-
+    OkHttpClient client = new OkHttpClient.Builder()
+            .readTimeout(60, TimeUnit.SECONDS) // Increase the timeout to 60 seconds
+            .build();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,7 @@ public class ChatActivity extends AppCompatActivity {
         welcomeTextView = findViewById(R.id.welcome_text);
         messageEditText = findViewById(R.id.message_edit_text);
         sendButton = findViewById(R.id.send_btn);
+        sendButton.setEnabled(false);
 
         //setup recycler view
         messageAdapter = new MessageAdapter(messageList);
@@ -61,11 +69,26 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setStackFromEnd(true);
         recyclerView.setLayoutManager(llm);
+        // Add a text watcher to the EditText to enable/disable the send button
+        messageEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Enable the send button only if the EditText is not empty and the bot is not typing
+                sendButton.setEnabled(!s.toString().trim().isEmpty() && !isBotTyping);
+            }
+        });
         sendButton.setOnClickListener((v)->{
             String question = messageEditText.getText().toString().trim();
             addToChat(question,Message.SENT_BY_ME);
             messageEditText.setText("");
+            isBotTyping = true;
+            sendButton.setEnabled(false);
             callAPI(question);
             welcomeTextView.setVisibility(View.GONE);
         });
@@ -85,6 +108,9 @@ public class ChatActivity extends AppCompatActivity {
     void addResponse(String response){
         messageList.remove(messageList.size()-1);
         addToChat(response,Message.SENT_BY_BOT);
+        isBotTyping = false;
+        sendButton.setEnabled(!messageEditText.getText().toString().trim().isEmpty());
+
     }
 
     void callAPI(String question){
