@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "989744559808",
+    "firebase_url": "https://gestion-materielle-hackathon-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "gestion-materielle-hackathon",
     "storage_bucket": "gestion-materielle-hackathon.appspot.com"
   },

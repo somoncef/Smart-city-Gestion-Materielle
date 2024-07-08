@@ -5,92 +5,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/dark_blue"
-    tools:context=".Classification">
-
-
-    <!-- CardView 1 -->
-
-    <!-- CardView 2 -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/basic"
-        android:paddingHorizontal="20dp"
-        android:text="Classification"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:layout_marginTop="50dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:fontFamily="@font/poppins_italic"
-        android:textColor="@color/white"
-
-
-        android:text="Priorité"
-        android:textSize="20sp"
-
-        android:layout_marginTop="20dp"/>
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="30dp">
+        android:background="@color/dark_blue"
+        android:orientation="vertical"
+        tools:context=".Classification">
 
-
-        <Button
-            android:id="@+id/Haute"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:padding="12dp"
-            android:text="Haute"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/basic"
+            android:paddingHorizontal="20dp"
+            android:text="Classification"
+            android:textAlignment="center"
             android:textColor="@color/white"
-            android:background="@drawable/redbutton"
-            />
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/Moyenne"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="8dp"
-            android:padding="12dp"
-            android:text="Moyenne"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/poppins_italic"
+            android:text="Priorité"
             android:textColor="@color/white"
+            android:textSize="20sp" />
 
-            android:background="@drawable/yellowbutton"
-            />
-
-
-        <Button
-            android:id="@+id/Basse"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:padding="12dp"
-            android:text="Basse"
-            android:textColor="@color/white"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            android:background="@drawable/greenbutton"
+            <Button
+                android:id="@+id/Haute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/redbutton"
+                android:padding="12dp"
+                android:text="Haute"
+                android:textColor="@color/white" />
 
-            />
+            <Button
+                android:id="@+id/Moyenne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/yellowbutton"
+                android:padding="12dp"
+                android:text="Moyenne"
+                android:textColor="@color/white" />
 
-
+            <Button
+                android:id="@+id/Basse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/greenbutton"
+                android:padding="12dp"
+                android:text="Basse"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
-    <!-- Ajoutez cette CardView à la suite des autres vues -->
 
-    <!-- Rangée de CardView -->
-    <LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="175dp"
         android:id="@+id/row1"
@@ -104,7 +106,6 @@
 
         >
 
-        <!-- Première CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -147,21 +148,16 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la première CardView -->
-            <!-- Vous pouvez ajouter vos vues ici -->
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Espace vide -->
         <Space
             android:layout_width="10dp"
             android:layout_height="match_parent" />
 
-        <!-- Deuxième CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/emptyCard"
             android:layout_margin="15dp"
             android:layout_weight="1"
             app:cardElevation="20dp"
@@ -198,20 +194,431 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la CardView vide -->
-            <!-- Vous pouvez laisser cette CardView vide -->
-
         </androidx.cardview.widget.CardView>
 
 
-        <!-- Répétez ce modèle pour d'autres CardView ou espace vide si nécessaire -->
-        <!-- ... -->
-
     </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/card"
+
+                >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-10"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/yellowcircle"
+                            android:layout_gravity="end"
+                            />
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-15"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/circlebutton"
+                            android:layout_gravity="end" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/card"
+
+                >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-10"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/yellowcircle"
+                            android:layout_gravity="end"
+                            />
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-15"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/circlebutton"
+                            android:layout_gravity="end" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/card"
+
+                >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-10"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/yellowcircle"
+                            android:layout_gravity="end"
+                            />
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-15"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/circlebutton"
+                            android:layout_gravity="end" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/card"
+
+                >
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-10"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/yellowcircle"
+                            android:layout_gravity="end"
+                            />
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_weight="1"
+                    app:cardElevation="20dp"
+                    app:cardCornerRadius="20dp"
+                    android:backgroundTint="@color/card"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/basic"
+                            android:text="Lampadaire-15"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_italic"
+                            android:text="l'état des lampadaires en temps réel"
+                            android:textColor="@color/grey_text"
+                            android:textSize="14sp" />
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@drawable/circlebutton"
+                            android:layout_gravity="end" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="175dp"
-        android:id="@+id/row1"
+        android:id="@+id/row2"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
         android:padding="10dp"
@@ -222,11 +629,9 @@
 
         >
 
-        <!-- Première CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:id="@+id/clothingCard"
             android:layout_margin="15dp"
             android:layout_weight="1"
             app:cardElevation="20dp"
@@ -265,17 +670,12 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la première CardView -->
-            <!-- Vous pouvez ajouter vos vues ici -->
-
         </androidx.cardview.widget.CardView>
 
-        <!-- Espace vide -->
         <Space
             android:layout_width="10dp"
             android:layout_height="match_parent" />
 
-        <!-- Deuxième CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -316,14 +716,7 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la CardView vide -->
-            <!-- Vous pouvez laisser cette CardView vide -->
-
         </androidx.cardview.widget.CardView>
-
-
-        <!-- Répétez ce modèle pour d'autres CardView ou espace vide si nécessaire -->
-        <!-- ... -->
 
     </LinearLayout>
     <LinearLayout
@@ -338,7 +731,6 @@
         >
 
 
-        <!-- Première CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -379,17 +771,12 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la première CardView -->
-            <!-- Vous pouvez ajouter vos vues ici -->
-
         </androidx.cardview.widget.CardView>
 
-        <!-- Espace vide -->
         <Space
             android:layout_width="10dp"
             android:layout_height="match_parent" />
 
-        <!-- Deuxième CardView -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -434,27 +821,9 @@
 
             </LinearLayout>
 
-            <!-- Contenu de la CardView vide -->
-            <!-- Vous pouvez laisser cette CardView vide -->
-
         </androidx.cardview.widget.CardView>
-    <!-- Ajoutez cette CardView à la suite des autres vues -->
 
-    <!-- Rangée de CardView -->
-
-    <!-- Ajoutez cette CardView à la suite des autres vues -->
-
-    <!-- Rangée de CardView -->
-
-
-
-
-
-
-
-    <!-- CardView 3 -->
-
-    <!-- CardView 4 -->
-
-</LinearLayout>
+    </LinearLayout>-->
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
