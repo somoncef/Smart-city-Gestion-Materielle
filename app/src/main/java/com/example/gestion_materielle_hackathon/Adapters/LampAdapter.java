@@ -36,7 +36,13 @@ public class LampAdapter extends RecyclerView.Adapter<LampAdapter.LampViewHolder
     public void onBindViewHolder(@NonNull LampViewHolder holder, int position) {
         Lamp lamp = lamps.get(position);
         holder.lampId.setText(lamp.getId());
-        // Set other views as needed
+        if (lamp.getPriority().equals("high")) {
+            holder.vPriority.setBackground(holder.itemView.getContext().getDrawable(R.drawable.redcircle));
+        } else if (lamp.getPriority().equals("medium")) {
+            holder.vPriority.setBackground(holder.itemView.getContext().getDrawable(R.drawable.yellowcircle));
+        } else {
+            holder.vPriority.setBackground(holder.itemView.getContext().getDrawable(R.drawable.circlebutton));
+        }
     }
 
     @Override

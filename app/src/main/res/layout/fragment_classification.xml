@@ -45,34 +45,46 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/Haute"
+                android:id="@+id/bHigh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="5dp"
                 android:background="@drawable/redbutton"
-                android:padding="12dp"
+                android:padding="9dp"
                 android:text="Haute"
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/Moyenne"
+                android:id="@+id/bMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="@drawable/yellowbutton"
-                android:padding="12dp"
+                android:padding="9dp"
                 android:text="Moyenne"
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/Basse"
+                android:id="@+id/bLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="@drawable/greenbutton"
-                android:padding="12dp"
+                android:padding="9dp"
                 android:text="Basse"
+                android:textColor="@color/white" />
+            <Button
+                android:id="@+id/bAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/graybutton"
+                android:padding="9dp"
+                android:text="All"
                 android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>

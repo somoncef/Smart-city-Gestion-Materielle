@@ -6,6 +6,7 @@ public class Lamp {
     private double latitude;
     private double longitude;
     private boolean on = true;
+    private  String priority;
 
     public Lamp() {
 
@@ -21,6 +22,14 @@ public class Lamp {
 
     public String getId() {
         return id;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     public void setId(String id) {

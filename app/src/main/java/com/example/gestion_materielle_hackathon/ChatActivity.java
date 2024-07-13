@@ -41,6 +41,8 @@ public class ChatActivity extends AppCompatActivity {
     TextView welcomeTextView;
     EditText messageEditText;
     ImageButton sendButton;
+    ImageButton back_btn;
+
     List<Message> messageList;
     MessageAdapter messageAdapter;
 
@@ -62,12 +64,14 @@ public class ChatActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.message_edit_text);
         sendButton = findViewById(R.id.send_btn);
         sendButton.setEnabled(false);
-
+        back_btn = findViewById(R.id.back_btn);
         //setup recycler view
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setStackFromEnd(true);
+
+
         recyclerView.setLayoutManager(llm);
         // Add a text watcher to the EditText to enable/disable the send button
         messageEditText.addTextChangedListener(new TextWatcher() {
@@ -83,6 +87,15 @@ public class ChatActivity extends AppCompatActivity {
                 sendButton.setEnabled(!s.toString().trim().isEmpty() && !isBotTyping);
             }
         });
+
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         sendButton.setOnClickListener((v)->{
             String question = messageEditText.getText().toString().trim();
             addToChat(question,Message.SENT_BY_ME);

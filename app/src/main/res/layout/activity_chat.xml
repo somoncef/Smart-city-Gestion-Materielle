@@ -7,12 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0C0F22"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/back_btn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back_24" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Assistant"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_margin="12dp"
+            android:fontFamily="@font/poppins_italic"
+            android:textStyle="bold"
+            android:layout_gravity="center"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+        <View
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycler_view"
-        android:layout_above="@id/bottom_layout">
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_below="@+id/linearLayout"
+        android:layout_above="@id/bottom_layout"/>
+
 
     <TextView
         android:layout_width="match_parent"
@@ -20,7 +58,7 @@
         android:id="@+id/welcome_text"
         android:layout_centerInParent="true"
         android:textColor="@color/white"
-        android:text="Welcome to Easy chatGPT\nTry it out now"
+        android:text="If you have any questions, please ask me."
         android:gravity="center"
         android:textSize="28sp" />
 
@@ -35,22 +73,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/message_edit_text"
-            android:textColor="@color/white"
             android:hint="write here"
+            android:textColorHint="@color/white"
+            android:backgroundTint="@color/grey"
             android:padding="16dp"
             android:layout_toStartOf="@id/send_btn"
+            android:background="@drawable/rounded_corner"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             />
 
         <ImageButton
+            android:id="@+id/send_btn"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:id="@+id/send_btn"
             android:layout_alignParentEnd="true"
-            android:padding="8dp"
-            android:src="@drawable/baseline_send_24"
-            android:background="?attr/selectableItemBackgroundBorderless"/>
+            android:layout_alignParentBottom="true"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="16dp"
+            android:src="@drawable/baseline_send_24" />
     </RelativeLayout>
 </RelativeLayout>

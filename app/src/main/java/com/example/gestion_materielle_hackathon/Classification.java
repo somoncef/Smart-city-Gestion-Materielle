@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.gestion_materielle_hackathon.Adapters.LampAdapter;
 import com.example.gestion_materielle_hackathon.model.Lamp;
@@ -32,6 +33,8 @@ public class Classification extends Fragment {
     private RecyclerView recyclerView;
     private LampAdapter lampAdapter;
 
+    private Button bHigh, bMedium, bLow,bAll;
+
     private DatabaseReference myRef;
 
     @Override
@@ -50,6 +53,81 @@ public class Classification extends Fragment {
         // Fetch the data from the database
         List<Lamp> lamps = fetchLamps();
 
+        bHigh = view.findViewById(R.id.bHigh);
+        bMedium = view.findViewById(R.id.bMedium);
+        bLow = view.findViewById(R.id.bLow);
+        bAll = view.findViewById(R.id.bAll);
+
+        bHigh.setOnClickListener(v -> myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Lamp> lamps1 = new ArrayList<>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    Lamp lamp = child.getValue(Lamp.class);
+                    if (lamp != null && !lamp.isOn() && lamp.getPriority().equals("high")) {
+                        lamps1.add(lamp);
+                    }
+                }
+                lampAdapter.setLamps(lamps1);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Classification", "Failed to fetch lamps", error.toException());
+            }
+        }));
+        bMedium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<Lamp> lamps = new ArrayList<>();
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            Lamp lamp = child.getValue(Lamp.class);
+                            if (lamp != null && !lamp.isOn() && lamp.getPriority().equals("medium")) {
+                                lamps.add(lamp);
+                            }
+                        }
+                        lampAdapter.setLamps(lamps);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Classification", "Failed to fetch lamps", error.toException());
+                    }
+                });
+
+            }
+        });
+        bLow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<Lamp> lamps = new ArrayList<>();
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            Lamp lamp = child.getValue(Lamp.class);
+                            if (lamp != null && !lamp.isOn() && lamp.getPriority().equals("low")) {
+                                lamps.add(lamp);
+                            }
+                        }
+                        lampAdapter.setLamps(lamps);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Classification", "Failed to fetch lamps", error.toException());
+                    }
+                });
+
+            }
+        });
+
+
+        bAll.setOnClickListener(v -> fetchLamps());
+
         // Set up the RecyclerView
         lampAdapter = new LampAdapter(lamps);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -57,8 +135,6 @@ public class Classification extends Fragment {
     }
 
     private List<Lamp> fetchLamps() {
-        // Fetch the lamps with on = false from the database and return them
-        // This is a placeholder and needs to be replaced with actual code
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
