@@ -11,9 +11,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
+
         android:orientation="vertical"
 
         >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:gravity="end">
+            <TextView
+                android:id="@+id/tvLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/basic"
+                android:layout_marginEnd="8dp"
+                android:gravity="end"
+                android:layout_gravity="center"
+                android:text="Log out"
+                android:textColor="@color/white"/>
+            <ImageView
+                android:id="@+id/bLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/baseline_logout_24" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,6 +64,8 @@
             android:layout_marginTop="10dp"
 
             />
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
