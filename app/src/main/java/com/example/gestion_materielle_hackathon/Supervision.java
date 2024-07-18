@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.gestion_materielle_hackathon.model.Lamp;
+import com.example.gestion_materielle_hackathon.model.StreetLamp;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,8 +38,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -46,15 +50,87 @@ import java.util.Random;
 public class Supervision extends Fragment  implements OnMapReadyCallback {
 
     private SupportMapFragment mapFragment;
+    Button bOn, bOff,bAllLamps;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private DatabaseReference myRef;
+
+    private Query lampQuery;
+    private String lastLampId = null;
+    private BitmapDescriptor lampOnIcon;
+    private BitmapDescriptor lampOffIcon;
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        bOff = view.findViewById(R.id.bOff);
+        bOn = view.findViewById(R.id.bOn);
+        bAllLamps = view.findViewById(R.id.bAllLamps);
+
+        bOn.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "Showing off lamps", Toast.LENGTH_SHORT).show();
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    mMap.clear(); // Clear all markers
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        Lamp lamp = postSnapshot.getValue(Lamp.class);
+                        assert lamp != null;
+                        if (lamp.isOn()) { // Check if the lamp is off
+                            LatLng lampLocation = new LatLng(lamp.getLatitude(), lamp.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(lampLocation)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.lampon))
+                                    .title(lamp.getId())
+                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
+                            mMap.addMarker(markerOptions); // Add marker for the off lamp
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w(TAG, "", error.toException());
+                }
+            });
+        });
+
+        bOff.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "Showing off lamps", Toast.LENGTH_SHORT).show();
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    mMap.clear(); // Clear all markers
+                    for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                        Lamp lamp = postSnapshot.getValue(Lamp.class);
+                        assert lamp != null;
+                        if (!lamp.isOn()) { // Check if the lamp is off
+                            LatLng lampLocation = new LatLng(lamp.getLatitude(), lamp.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(lampLocation)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.lampoff))
+                                    .title(lamp.getId())
+                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
+                            mMap.addMarker(markerOptions); // Add marker for the off lamp
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Log.w(TAG, "", error.toException());
+                }
+            });
+        });
+
+        bAllLamps.setOnClickListener(v -> {
+            Toast.makeText(getActivity(), "Clearing all lamps", Toast.LENGTH_SHORT).show();
+            mMap.clear(); // Clear all markers
+        });
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -66,6 +142,41 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         myRef = database.getReference("lamps");
+        
+//        fetchStreetDataAndGenerateLamps();
+
+
+    }
+
+    private void fetchStreetDataAndGenerateLamps() {
+        new Thread(() -> {
+            try {
+                OSMStreetDataFetcher fetcher = new OSMStreetDataFetcher();
+                double minLat = 35.604570;
+                double minLon =  -5.294401;
+                double maxLat = 35.643955;
+                double maxLon = -5.269397;
+                List<StreetSegment> streets = fetcher.fetchStreetData(minLat, minLon, maxLat, maxLon);
+
+                double averageDistance = 50;  // distance between street lamps in meters
+                List<StreetLamp> streetLamps = StreetLampGenerator.generateStreetLampsAlongStreets(streets, averageDistance);
+
+                // Save the generated street lamp coordinates to Firebase
+                saveStreetLampsToFirebase(streetLamps);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private void saveStreetLampsToFirebase(List<StreetLamp> streetLamps) {
+        for (StreetLamp lamp : streetLamps) {
+            String lampKey = myRef.push().getKey();
+            if (lampKey != null) {
+                myRef.child(lampKey).setValue(lamp);
+            }
+        }
+
     }
 
 
@@ -78,7 +189,10 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        lampOnIcon = BitmapDescriptorFactory.fromResource(R.drawable.lampon);
+        lampOffIcon = BitmapDescriptorFactory.fromResource(R.drawable.lampoff);
 
+        // Rest
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(@NonNull Marker marker) {
@@ -131,81 +245,32 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 Log.w(TAG, "", error.toException());
             }
         });
-
+        lampQuery = myRef.orderByKey().limitToFirst(50);
+        loadLamps();
     }
-
-/*    public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
-        map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+    private void loadLamps() {
+        lampQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public View getInfoWindow(@NonNull Marker marker) {
-                return null;  // Use the default InfoWindow frame
-            }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    Lamp lamp = postSnapshot.getValue(Lamp.class);
+                    assert lamp != null;
+                    LatLng lampLocation = new LatLng(lamp.getLatitude(), lamp.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions().position(lampLocation) .icon(lamp.isOn() ? lampOnIcon : lampOffIcon).title(lamp.getId()).snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
+                    mMap.addMarker(markerOptions);
 
-            @Override
-            public View getInfoContents(@NonNull Marker marker) {
-                View view = getLayoutInflater().inflate(R.layout.map_info_window, null);
-
-                TextView tvMapUser = view.findViewById(R.id.tvMapUser);
-                TextView tvMapDifficulty = view.findViewById(R.id.tvMapDifficulty);
-                TextView tvMapScore = view.findViewById(R.id.tvMapScore);
-
-                tvMapUser.setText(marker.getTitle());
-                String[] snippets = Objects.requireNonNull(marker.getSnippet()).split("\n");
-                tvMapDifficulty.setText(snippets[0]);
-                tvMapScore.setText(snippets[1]);
-
-                return view;
-            }
-        });
-        LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,10.0f));
-        firestore.collection("Quizz").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (DocumentSnapshot document : task.getResult()) {
-                    String userId = document.getString("userId");
-                    Long score = document.getLong("score");
-                    String difficultyLevel = document.getString("difficultyLevel");
-
-                    firestore.collection("User").document(Objects.requireNonNull(userId)).get().addOnCompleteListener(task1 -> {
-                        if (task1.isSuccessful()) {
-                            DocumentSnapshot document1 = task1.getResult();
-                            String id = document1.getId();
-                            String userName = document1.getString("name");
-                            Double userLat = document1.getDouble("userLat");
-                            Double userLng = document1.getDouble("userLng");
-
-
-                            if (userLat != null && userLng != null) {
-                                LatLng userLocation = new LatLng(userLat, userLng);
-                                MarkerOptions markerOptions = new MarkerOptions().position(userLocation).title(userName).snippet(difficultyLevel + "\n" + score);
-
-                                switch (Objects.requireNonNull(difficultyLevel)) {
-                                    case "Hard":
-                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                                        break;
-                                    case "Medium":
-                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                                        break;
-                                    case "Easy":
-                                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                                        break;
-                                }
-
-                                if (userId.equals(UserID)) {
-                                    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-                                }
-
-                                map.addMarker(markerOptions);
-                            } else {
-                                Log.d(MotionEffect.TAG, "Error getting documents: ", task1.getException());
-                            }
-                        }
-                    });
+                    // Update the last lamp ID
+                    lastLampId = postSnapshot.getKey();
                 }
-            } else {
-                Log.d(MotionEffect.TAG, "Error getting documents: ", task.getException());
+
+                // Update the query for the next load
+                lampQuery = myRef.orderByKey().startAfter(lastLampId).limitToFirst(50);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Log.w(TAG, "", error.toException());
             }
         });
-    }*/
+    }
 }
