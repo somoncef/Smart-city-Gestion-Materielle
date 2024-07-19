@@ -5,12 +5,27 @@ public class StreetLamp {
     private double latitude;
     private double longitude;
     private boolean on;
+    private  String priority;
 
+    public StreetLamp(String id, double latitude, double longitude, boolean on, String priority) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.on = on;
+        this.priority = priority;
+    }
     public StreetLamp(String id, double latitude, double longitude, boolean on) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.on = on;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
     public StreetLamp() {

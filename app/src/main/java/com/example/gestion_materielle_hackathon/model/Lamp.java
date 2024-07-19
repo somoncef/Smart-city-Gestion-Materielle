@@ -7,7 +7,6 @@ public class Lamp {
     private double longitude;
     private boolean on = true;
     private  String priority;
-    private String workerId;
 
     public Lamp() {
 
@@ -28,14 +27,6 @@ public class Lamp {
     public String getPriority() {
         return priority;
     }
-    public String getWorkerId() {
-        return workerId;
-    }
-
-    public void setWorkerId(String workerId) {
-        this.workerId = workerId;
-    }
-
     public void setPriority(String priority) {
         this.priority = priority;
     }

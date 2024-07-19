@@ -9,15 +9,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="50"
+        android:layout_weight="60"
         android:orientation="vertical">
-
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/shinergy_logo" />
         <TextView
             android:id="@+id/big_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
             android:fontFamily="@font/basic"
             android:paddingHorizontal="20dp"
             android:text="Supervision"

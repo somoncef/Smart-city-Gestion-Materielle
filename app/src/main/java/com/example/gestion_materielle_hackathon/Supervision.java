@@ -2,11 +2,13 @@ package com.example.gestion_materielle_hackathon;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.example.gestion_materielle_hackathon.model.Lamp;
+import com.example.gestion_materielle_hackathon.model.SignificantArea;
 import com.example.gestion_materielle_hackathon.model.StreetLamp;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import androidx.annotation.NonNull;
@@ -40,11 +42,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 
 public class Supervision extends Fragment  implements OnMapReadyCallback {
@@ -52,7 +53,6 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
     private SupportMapFragment mapFragment;
     Button bOn, bOff,bAllLamps;
     private GoogleMap mMap;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private DatabaseReference myRef;
 
     private Query lampQuery;
@@ -69,9 +69,8 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
         bOff = view.findViewById(R.id.bOff);
         bOn = view.findViewById(R.id.bOn);
         bAllLamps = view.findViewById(R.id.bAllLamps);
-
         bOn.setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Showing off lamps", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Showing on lamps", Toast.LENGTH_SHORT).show();
             myRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -79,20 +78,20 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                     for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                         Lamp lamp = postSnapshot.getValue(Lamp.class);
                         assert lamp != null;
-                        if (lamp.isOn()) { // Check if the lamp is off
+                        if (lamp.isOn()) { // Check if the lamp is on
                             LatLng lampLocation = new LatLng(lamp.getLatitude(), lamp.getLongitude());
                             MarkerOptions markerOptions = new MarkerOptions()
                                     .position(lampLocation)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.lampon))
                                     .title(lamp.getId())
-                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
-                            mMap.addMarker(markerOptions); // Add marker for the off lamp
+                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude() + "\n" + lamp.getPriority()); // Include the priority here
+                            mMap.addMarker(markerOptions); // Add marker for the on lamp
                         }
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError error) {
+                public void onCancelled(@NonNull DatabaseError error) {
                     Log.w(TAG, "", error.toException());
                 }
             });
@@ -113,14 +112,14 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                                     .position(lampLocation)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.lampoff))
                                     .title(lamp.getId())
-                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
+                                    .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude() + "\n" + lamp.getPriority()); // Include the priority here
                             mMap.addMarker(markerOptions); // Add marker for the off lamp
                         }
                     }
                 }
 
                 @Override
-                public void onCancelled(DatabaseError error) {
+                public void onCancelled(@NonNull DatabaseError error) {
                     Log.w(TAG, "", error.toException());
                 }
             });
@@ -132,10 +131,10 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
         });
 
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        if (ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // If the permission is not granted, request the permission
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             mapFragment.getMapAsync(this);
         }
@@ -158,8 +157,38 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 double maxLon = -5.269397;
                 List<StreetSegment> streets = fetcher.fetchStreetData(minLat, minLon, maxLat, maxLon);
 
-                double averageDistance = 50;  // distance between street lamps in meters
-                List<StreetLamp> streetLamps = StreetLampGenerator.generateStreetLampsAlongStreets(streets, averageDistance);
+
+                // high priority areas
+                List<SignificantArea> highPriorityAreas = Arrays.asList(
+                        new SignificantArea(Arrays.asList(
+                                new Coordinate(35.614183, -5.269731),
+                                new Coordinate(35.611602, -5.290831),
+                                new Coordinate(35.628910, -5.295647),
+                                new Coordinate(35.632040, -5.275508)
+                        ))
+                );
+
+                // medium priority areas
+                List<SignificantArea> mediumPriorityAreas = Arrays.asList(
+                        new SignificantArea(Arrays.asList(
+                                new Coordinate(35.628284, -5.301814),
+                                new Coordinate(35.627187, -5.295936),
+                                new Coordinate(35.608890, -5.303204),
+                                new Coordinate(35.609028, -5.295138)
+                        ))
+                );
+
+                // low priority areas
+                List<SignificantArea> lowPriorityAreas = Arrays.asList(
+                        new SignificantArea(Arrays.asList(
+                                new Coordinate(35.613917,  -5.270457),
+                                new Coordinate(35.610583, -5.279752),
+                                new Coordinate(35.606038, -5.272046),
+                                new Coordinate(35.607055, -5.267614)
+                        ))
+                );
+                double averageDistance = 50;  // distance between street lamps
+                List<StreetLamp> streetLamps = StreetLampGenerator.generateStreetLampsAlongStreets(streets, averageDistance, highPriorityAreas, mediumPriorityAreas, lowPriorityAreas);
 
                 // Save the generated street lamp coordinates to Firebase
                 saveStreetLampsToFirebase(streetLamps);
@@ -186,6 +215,7 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
     }
 
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -206,11 +236,19 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 TextView tvMapId = view.findViewById(R.id.tvMapId);
                 TextView tvMapLatitude = view.findViewById(R.id.tvMapLatitude);
                 TextView tvMapLongitude = view.findViewById(R.id.tvMapLongitude);
+                TextView tvMapPriority = view.findViewById(R.id.tvMapPriority); // New line
 
                 tvMapId.setText(marker.getTitle());
                 String[] snippets = Objects.requireNonNull(marker.getSnippet()).split("\n");
                 tvMapLatitude.setText(snippets[0]);
                 tvMapLongitude.setText(snippets[1]);
+
+                // Check if snippets array has at least 3 elements
+                if (snippets.length >= 3) {
+                    tvMapPriority.setText(snippets[2]);
+                } else {
+                    tvMapPriority.setText("No priority data available");
+                }
 
                 return view;
             }
@@ -222,26 +260,26 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
         BitmapDescriptor lampOnIcon = BitmapDescriptorFactory.fromResource(R.drawable.lampon);
         BitmapDescriptor lampOffIcon = BitmapDescriptorFactory.fromResource(R.drawable.lampoff);
 
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    Lamp lamp = postSnapshot.getValue(Lamp.class);
+                    StreetLamp lamp = postSnapshot.getValue(StreetLamp.class);
                     assert lamp != null;
                     LatLng lampLocation = new LatLng(lamp.getLatitude(), lamp.getLongitude());
-                    MarkerOptions markerOptions = new MarkerOptions().position(lampLocation) .icon(lamp.isOn() ? lampOnIcon : lampOffIcon).title(lamp.getId()).snippet(lamp.getLatitude() + "\n" + lamp.getLongitude());
-
-                    /*MarkerOptions markerOptions = new MarkerOptions()
+                    MarkerOptions markerOptions = new MarkerOptions()
                             .position(lampLocation)
                             .icon(lamp.isOn() ? lampOnIcon : lampOffIcon)
-                            .title(lamp.getId()).snippet(String.valueOf(lamp.getLongitude()) );*/
+                            .title(lamp.getId())
+                            .snippet(lamp.getLatitude() + "\n" + lamp.getLongitude() + "\n" + lamp.getPriority()); // Fetch the priority here
                     mMap.addMarker(markerOptions);
                 }
             }
 
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "", error.toException());
             }
         });
@@ -268,7 +306,7 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 Log.w(TAG, "", error.toException());
             }
         });

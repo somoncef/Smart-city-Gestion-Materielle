@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/homeContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="12dp"
 
         android:orientation="vertical"
@@ -19,15 +19,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="10dp"
-            android:gravity="end">
+            android:padding="10dp">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:layout_gravity="start"
+                android:src="@drawable/shinergy_logo" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
             <TextView
                 android:id="@+id/tvLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/basic"
                 android:layout_marginEnd="8dp"
-                android:gravity="end"
                 android:layout_gravity="center"
                 android:text="Log out"
                 android:textColor="@color/white"/>
@@ -35,7 +43,7 @@
                 android:id="@+id/bLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="center"
                 android:src="@drawable/baseline_logout_24" />
         </LinearLayout>
 
@@ -43,11 +51,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="12dp"
             android:fontFamily="@font/basic"
             android:paddingHorizontal="20dp"
-            android:text="Gestion Materielles des Lampadaire smart city"
+            android:text="ShinErgy"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="30sp"
@@ -64,8 +72,9 @@
             android:layout_marginTop="10dp"
 
             />
-
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,7 +89,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/card"
                 android:paddingVertical="20dp"
-                app:cardCornerRadius="20dp"
+                android:layout_marginVertical="20dp"
+                app:cardCornerRadius="10dp"
                 >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -133,6 +143,8 @@
                 android:backgroundTint="@color/card"
                 android:paddingVertical="20dp"
                 app:cardCornerRadius="20dp"
+                android:layout_marginVertical="10dp"
+
                 >
                 <LinearLayout
                     android:id="@+id/cardClassification"
@@ -140,6 +152,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="20dp"
+
                     android:gravity="center">
 
                     <ImageView
@@ -187,6 +200,8 @@
                 android:backgroundTint="@color/card"
                 android:paddingVertical="20dp"
                 app:cardCornerRadius="20dp"
+                android:layout_marginVertical="10dp"
+
                 >
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -234,6 +249,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
         </LinearLayout>
+</ScrollView>
     </LinearLayout>
 
 

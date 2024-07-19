@@ -73,4 +73,26 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="priorite: " />
+
+        <TextView
+            android:id="@+id/tvMapPriority"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="high"
+            android:textColor="@color/dark_blue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

@@ -1,3 +1,5 @@
+import java.util.regex.Pattern.compile
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -55,6 +57,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     implementation ("com.google.code.gson:gson:2.10.1")
+    implementation ("com.google.android.gms:play-services-places:17.1.0")
+    implementation ("com.google.maps.android:android-maps-utils:3.8.2")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
