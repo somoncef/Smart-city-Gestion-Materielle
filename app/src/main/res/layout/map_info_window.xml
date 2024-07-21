@@ -94,5 +94,26 @@
             android:textColor="@color/dark_blue"
             android:textSize="16sp"
             android:textStyle="bold" />
+    </LinearLayout>    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="zone: " />
+
+        <TextView
+            android:id="@+id/tvMapZoneName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="zone 1"
+            android:textColor="@color/dark_blue"
+            android:textSize="16sp"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

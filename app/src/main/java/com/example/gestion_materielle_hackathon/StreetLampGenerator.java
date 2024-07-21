@@ -2,6 +2,7 @@ package com.example.gestion_materielle_hackathon;
 
 import com.example.gestion_materielle_hackathon.model.SignificantArea;
 import com.example.gestion_materielle_hackathon.model.StreetLamp;
+import com.example.gestion_materielle_hackathon.model.Zone;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,29 +24,22 @@ public class StreetLampGenerator {
     }
 
     // Function to generate street lamp coordinates along streets
-    public static List<StreetLamp> generateStreetLampsAlongStreets(
-            List<StreetSegment> streets, double distance,
-            List<SignificantArea> highPriorityAreas,
-            List<SignificantArea> mediumPriorityAreas,
-            List<SignificantArea> lowPriorityAreas) {
-
+    public static List<StreetLamp> generateStreetLampsAlongStreets(List<StreetSegment> streets, double distance, List<Zone> zones) {
         List<StreetLamp> lamps = new ArrayList<>();
         Random random = new Random();
-
         for (StreetSegment street : streets) {
             List<Coordinate> coordinates = street.getCoordinates();
             double accumulatedDistance = 0;
-
             for (int i = 0; i < coordinates.size() - 1; i++) {
                 Coordinate start = coordinates.get(i);
                 Coordinate end = coordinates.get(i + 1);
                 double segmentDistance = calculateDistance(start, end);
                 accumulatedDistance += segmentDistance;
-
                 if (accumulatedDistance >= distance) {
-                    boolean isOn = random.nextDouble() >= 0.02; // 2% off, 98% on
-                    String priority = calculatePriority(end, highPriorityAreas, mediumPriorityAreas, lowPriorityAreas);
-                    lamps.add(new StreetLamp(generateRandomId(8), end.getLat(), end.getLon(), isOn, priority));
+                    String zoneName = getZoneNameForCoordinate(end, zones);
+                    String priority = getPriorityForCoordinate(end, zones);
+                    boolean isOn = random.nextDouble() >= 0.02; // 2% chance to be off
+                    lamps.add(new StreetLamp(generateRandomId(8), end.getLat(), end.getLon(), isOn, priority, zoneName));
                     accumulatedDistance = 0;
                 }
             }
@@ -53,47 +47,24 @@ public class StreetLampGenerator {
         return lamps;
     }
 
-    // Calculate priority based on proximity to significant areas
-    private static String calculatePriority(Coordinate lampLocation,
-                                            List<SignificantArea> highPriorityAreas,
-                                            List<SignificantArea> mediumPriorityAreas,
-                                            List<SignificantArea> lowPriorityAreas) {
-
-        if (isWithinAnyArea(lampLocation, highPriorityAreas)) {
-            return "high";
-        } else if (isWithinAnyArea(lampLocation, mediumPriorityAreas)) {
-            return "medium";
-        } else if (isWithinAnyArea(lampLocation, lowPriorityAreas)) {
-            return "low";
-        }
-        return "low"; // Default priority
-    }
-
-    // Check if a coordinate is within any area in the list
-    private static boolean isWithinAnyArea(Coordinate coord, List<SignificantArea> areas) {
-        for (SignificantArea area : areas) {
-            if (isWithinArea(coord, area)) {
-                return true;
+    // Function to get the priority of a coordinate based on its zone
+    private static String getPriorityForCoordinate(Coordinate coord, List<Zone> zones) {
+        for (Zone zone : zones) {
+            if (zone.contains(coord)) {
+                return zone.getPriority();
             }
         }
-        return false;
+        return "low"; // Default priority if the coordinate is not within any zone
     }
 
-    // Check if a coordinate is within a specific area (simplified to a bounding box check)
-    private static boolean isWithinArea(Coordinate coord, SignificantArea area) {
-        List<Coordinate> areaCoords = area.getCoordinates();
-        double minLat = Double.MAX_VALUE, maxLat = Double.MIN_VALUE;
-        double minLon = Double.MAX_VALUE, maxLon = Double.MIN_VALUE;
-
-        for (Coordinate areaCoord : areaCoords) {
-            if (areaCoord.getLat() < minLat) minLat = areaCoord.getLat();
-            if (areaCoord.getLat() > maxLat) maxLat = areaCoord.getLat();
-            if (areaCoord.getLon() < minLon) minLon = areaCoord.getLon();
-            if (areaCoord.getLon() > maxLon) maxLon = areaCoord.getLon();
+    // Function to get the zone name of a coordinate
+    private static String getZoneNameForCoordinate(Coordinate coord, List<Zone> zones) {
+        for (Zone zone : zones) {
+            if (zone.contains(coord)) {
+                return zone.getName();
+            }
         }
-
-        return coord.getLat() >= minLat && coord.getLat() <= maxLat &&
-                coord.getLon() >= minLon && coord.getLon() <= maxLon;
+        return "unknown";
     }
 
     // Calculate distance between two coordinates

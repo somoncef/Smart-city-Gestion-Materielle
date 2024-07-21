@@ -136,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
             JSONArray messages = new JSONArray();
             JSONObject message1 = new JSONObject();
             message1.put("role", "system");
-            message1.put("content", "You are a helpful assistant.");
+            message1.put("content", "You are an assistant that specializes in guiding the process of changing street lamps.");
             messages.put(message1);
             JSONObject message2 = new JSONObject();
             message2.put("role", "user");
