@@ -26,6 +26,21 @@ public class Zone {
         this.name = name;
     }
 
+    public Coordinate getTopLeft() {
+        return topLeft;
+    }
+
+    public Coordinate getTopRight() {
+        return topRight;
+    }
+
+    public Coordinate getBottomLeft() {
+        return bottomLeft;
+    }
+
+    public Coordinate getBottomRight() {
+        return bottomRight;
+    }
 
     // Check if a coordinate is within the zone
     public boolean contains(Coordinate coord) {

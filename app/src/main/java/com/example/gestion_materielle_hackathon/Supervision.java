@@ -1,15 +1,13 @@
 package com.example.gestion_materielle_hackathon;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.gestion_materielle_hackathon.model.Lamp;
 import com.example.gestion_materielle_hackathon.model.StreetLamp;
 import com.example.gestion_materielle_hackathon.model.Zone;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +29,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
+import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,6 +40,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -49,16 +49,20 @@ import java.util.Objects;
 public class Supervision extends Fragment  implements OnMapReadyCallback {
 
     private SupportMapFragment mapFragment;
-    Button bOn, bOff,bAllLamps;
+    Button bOn, bOff, bAllLamps;
     private GoogleMap mMap;
-    private DatabaseReference equipesRef,lampsRef;
+    private DatabaseReference equipesRef, lampsRef;
 
     private Query lampQuery;
     private String lastLampId = null;
+    private boolean isGridVisible = false;
+
+
+    ImageView bGridToggle;
     private BitmapDescriptor lampOnIcon;
     private BitmapDescriptor lampOffIcon;
-    private FirebaseAuth fAuth;
-
+    private List<Polygon> polygons = new ArrayList<>();
+    private List<Zone> zones;
 
 
     @Override
@@ -68,14 +72,28 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         lampsRef = database.getReference("lamps");
-         equipesRef = database.getReference("equipes");
+        equipesRef = database.getReference("equipes");
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         bOff = view.findViewById(R.id.bOff);
         bOn = view.findViewById(R.id.bOn);
         bAllLamps = view.findViewById(R.id.bAllLamps);
+        bGridToggle = view.findViewById(R.id.bGridToggle);
 
         fetchLampsOnZone();
+
+        zones = Arrays.asList(
+                new Zone(new Coordinate(35.63526, -5.31188), new Coordinate(35.63774, -5.30080), new Coordinate(35.62315, -5.30778), new Coordinate(35.62564, -5.29669), "low", "zone 1"),
+                new Zone(new Coordinate(35.63774, -5.30080), new Coordinate(35.64023, -5.28971), new Coordinate(35.62564, -5.29669), new Coordinate(35.62812, -5.28560), "medium", "zone 2"),
+                new Zone(new Coordinate(35.64023, -5.28971), new Coordinate(35.64271, -5.27862), new Coordinate(35.62812, -5.28560), new Coordinate(35.63061, -5.27452), "low", "zone 3"),
+                new Zone(new Coordinate(35.62315, -5.30778), new Coordinate(35.62564, -5.29669), new Coordinate(35.61105, -5.30367), new Coordinate(35.61353, -5.29258), "high", "zone 4"),
+                new Zone(new Coordinate(35.62564, -5.29669), new Coordinate(35.62812, -5.28560), new Coordinate(35.61353, -5.29258), new Coordinate(35.61602, -5.28150), "high", "zone 5"),
+                new Zone(new Coordinate(35.62812, -5.28560), new Coordinate(35.63061, -5.27452), new Coordinate(35.61602, -5.28150), new Coordinate(35.61850, -5.27041), "high", "zone 6"),
+                new Zone(new Coordinate(35.61105, -5.30367), new Coordinate(35.61353, -5.29258), new Coordinate(35.59894, -5.29957), new Coordinate(35.60142, -5.28844), "low", "zone 7"),
+                new Zone(new Coordinate(35.61353, -5.29258), new Coordinate(35.61602, -5.28150), new Coordinate(35.60142, -5.28844), new Coordinate(35.60391, -5.27739), "medium", "zone 8"),
+                new Zone(new Coordinate(35.61602, -5.28150), new Coordinate(35.61850, -5.27041), new Coordinate(35.60391, -5.27739), new Coordinate(35.60639, -5.26630), "high", "zone 9")
+        );
+
 
         bOff.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "Showing off lamps", Toast.LENGTH_SHORT).show();
@@ -186,8 +204,8 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
 
         bAllLamps.setOnClickListener(v -> {
             Toast.makeText(getActivity(), "Loading all lamps", Toast.LENGTH_SHORT).show();
-                fetchLampsOnZone();
-            });
+            fetchLampsOnZone();
+        });
 
 
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
@@ -199,9 +217,7 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
         }
 
 
-
-        
-//        fetchStreetDataAndGenerateLamps();
+//       fetchStreetDataAndGenerateLamps();
 
 
     }
@@ -262,23 +278,11 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
             try {
                 OSMStreetDataFetcher fetcher = new OSMStreetDataFetcher();
                 double minLat = 35.59894;
-                double minLon =  -5.31188;
+                double minLon = -5.29957;
                 double maxLat = 35.64271;
-                double maxLon = -5.26630;
+                double maxLon = -5.27862;
                 List<StreetSegment> streets = fetcher.fetchStreetData(minLat, minLon, maxLat, maxLon);
 
-                // Define zones with their boundaries and priorities
-                List<Zone> zones = Arrays.asList(
-                        new Zone(new Coordinate(35.63526, -5.31188), new Coordinate(35.63774, -5.30080), new Coordinate(35.62315, -5.30778), new Coordinate(35.62564, -5.29669), "low" , "zone 1"),
-                        new Zone(new Coordinate(35.63774, -530080), new Coordinate(35.64023, -5.28971), new Coordinate(35.62564, -5.29669), new Coordinate(35.62812, -5.28560), "medium", "zone 2"),
-                        new Zone(new Coordinate(35.64023, -5.28971), new Coordinate(35.64271, -5.27862), new Coordinate(35.62812, -5.28560), new Coordinate(35.63061, -5.27452), "low", "zone 3"),
-                        new Zone(new Coordinate(35.62315, -5.30778), new Coordinate(35.62564, -5.29669), new Coordinate(35.61105, -5.30367), new Coordinate(35.61353, -5.29258), "high", "zone 4"),
-                        new Zone(new Coordinate(35.62564, -5.29669), new Coordinate(35.62812, -5.28560), new Coordinate(35.61353, -5.29258), new Coordinate(35.61602, -5.28150), "high", "zone 5"),
-                        new Zone(new Coordinate(35.62812, -5.28560), new Coordinate(35.63061, -5.27452), new Coordinate(35.61602, -5.28150), new Coordinate(35.61850, -5.27041), "high", "zone 6"),
-                        new Zone(new Coordinate(35.61105, -5.30367), new Coordinate(35.61353, -5.29258), new Coordinate(35.59894, -5.29957), new Coordinate(35.660142, -5.28844), "low", "zone 7"),
-                        new Zone(new Coordinate(35.61353, -5.29258), new Coordinate(35.61602, -5.28150), new Coordinate(35.660142, -5.28844), new Coordinate(35.60391, -5.27739), "medium", "zone 8"),
-                        new Zone(new Coordinate(35.61602, -5.28150), new Coordinate(35.61850, -5.27041), new Coordinate(35.60391, -5.27739), new Coordinate(35.60639, -5.26630), "high", "zone 9")
-                );
 
                 double averageDistance = 50;  // distance between street lamps
                 List<StreetLamp> lamps = StreetLampGenerator.generateStreetLampsAlongStreets(streets, averageDistance, zones);
@@ -288,22 +292,22 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                     System.out.println("ID: " + lamp.getId() + ", Lat: " + lamp.getLatitude() + ", Lon: " + lamp.getLongitude() + ", On: " + lamp.isOn() + ", Priority: " + lamp.getPriority());
                 }
                 // Save the generated street lamp coordinates to Firebase
-//                saveStreetLampsToFirebase(lamps);
+                saveStreetLampsToFirebase(lamps);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
     }
 
-/*    private void saveStreetLampsToFirebase(List<StreetLamp> streetLamps) {
+    private void saveStreetLampsToFirebase(List<StreetLamp> streetLamps) {
         for (StreetLamp lamp : streetLamps) {
-            String lampKey = myRef.push().getKey();
+            String lampKey = lampsRef.push().getKey();
             if (lampKey != null) {
-                myRef.child(lampKey).setValue(lamp);
+                lampsRef.child(lampKey).setValue(lamp);
             }
         }
 
-    }*/
+    }
 
 
     @Override
@@ -347,12 +351,34 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 return view;
             }
         });
+        bGridToggle.setOnClickListener(v -> {
+            isGridVisible = !isGridVisible;  // Toggle the grid visibility
+            if (isGridVisible) {
+                for (Zone zone : zones) {
+                    // Create a PolygonOptions object and add the coordinates to it
+                    PolygonOptions rectOptions = new PolygonOptions()
+                            .add(new LatLng(zone.getTopLeft().getLat(), zone.getTopLeft().getLon()))
+                            .add(new LatLng(zone.getTopRight().getLat(), zone.getTopRight().getLon()))
+                            .add(new LatLng(zone.getBottomRight().getLat(), zone.getBottomRight().getLon()))
+                            .add(new LatLng(zone.getBottomLeft().getLat(), zone.getBottomLeft().getLon()));
+
+                    // Add the PolygonOptions object to the map
+                    Polygon polygon = mMap.addPolygon(rectOptions);
+                    polygons.add(polygon);
+                }
+            } else {
+                for (Polygon polygon : polygons) {
+                    polygon.remove();
+                }   // Clear all polygons
+                polygons.clear();  // Clear the list
+            }
+        });
 
         LatLng targetLocation = new LatLng(35.6234197, -5.2840685);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(targetLocation, 14.0f));
 
 
-/*        myRef.addValueEventListener(new ValueEventListener() {
+/*        lampsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
@@ -374,7 +400,7 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 Log.w(TAG, "", error.toException());
             }
         });
-        lampQuery = myRef.orderByKey().limitToFirst(50);
+        lampQuery = lampsRef.orderByKey().limitToFirst(50);
         loadLamps();
     }*/
     /*private void loadLamps() {
@@ -393,7 +419,7 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                 }
 
                 // Update the query for the next load
-                lampQuery = myRef.orderByKey().startAfter(lastLampId).limitToFirst(50);
+                lampQuery = lampsRef.orderByKey().startAfter(lastLampId).limitToFirst(50);
             }
 
             @Override
@@ -403,4 +429,4 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
         });
     }*/
     }
-}
+    }
