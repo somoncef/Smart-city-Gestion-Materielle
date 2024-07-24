@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".Action">
 
+    <!-- Header Layout with Logo and Title -->
     <LinearLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_marginBottom="10dp">
+
         <ImageView
             android:layout_width="60dp"
             android:layout_height="40dp"
@@ -20,6 +22,7 @@
             android:layout_marginStart="22dp"
             android:layout_marginTop="22dp"
             android:src="@drawable/shinergy_logo" />
+
         <TextView
             android:id="@+id/big_text"
             android:layout_width="wrap_content"
@@ -32,51 +35,90 @@
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold" />
-        <TextView
-            android:id="@+id/lampadaire_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_italic"
-            android:text="Lampadaire - 26: "
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:layout_marginStart="25dp"/>
-        <TextView
-            android:id="@+id/lampadaire_action"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reparer"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_marginTop="5dp"
-            android:textColor="@color/white"
-            android:layout_marginStart="25dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="14dp"
+            android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardMateriel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/card"
+                    android:paddingVertical="20dp"
+                    android:layout_marginVertical="20dp"
+                    app:cardCornerRadius="10dp"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="20dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="120dp"
+                            android:layout_height="80dp"
+                            android:contentDescription="Materiel"
+                            android:src="@drawable/demande_materiel" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/basic"
+                                android:text="Demande de Matériel"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins_italic"
+                                android:text="Remplir le formulaire pour demander du matériel "
+                                android:textColor="@color/grey_text"
+                                android:textSize="14sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </ScrollView>
+        </LinearLayout>
+
     </LinearLayout>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
-        >
-    </fragment>
-
-
+    <!-- Floating Action Button positioned at the bottom-right corner -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/map"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="40dp"
         android:contentDescription="Need help ?"
-        android:elevation="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="-100dp"
+        android:elevation="6dp"
         android:src="@drawable/baseline_question_mark_24"
         app:fabSize="normal" />
-
-
 
 </RelativeLayout>

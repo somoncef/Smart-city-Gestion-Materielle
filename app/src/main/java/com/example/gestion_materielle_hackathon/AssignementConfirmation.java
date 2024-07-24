@@ -46,6 +46,7 @@ public class AssignementConfirmation extends AppCompatActivity {
 
         bAccept.setOnClickListener(v -> {
             String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            updateChefNode("assignedZone", zoneName);
             updateChefNode("startDateTime", currentDateTime);
         });
 

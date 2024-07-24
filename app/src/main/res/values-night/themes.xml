@@ -4,7 +4,6 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="android:windowBackground">@color/dark_blue</item>
-        <item name="colorPrimary">@color/white</item>
-
+        <item name="android:statusBarColor">@color/dark_blue</item>
     </style>
 </resources>
