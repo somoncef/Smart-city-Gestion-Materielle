@@ -108,7 +108,6 @@ public class Supervision extends Fragment  implements OnMapReadyCallback {
                             break;
                         }
                     }
-
                     if (assignedZone != null) {
                         final String finalAssignedZone = assignedZone;
                         lampsRef.addListenerForSingleValueEvent(new ValueEventListener() {

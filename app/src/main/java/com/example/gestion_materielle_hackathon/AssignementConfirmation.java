@@ -59,7 +59,6 @@ public class AssignementConfirmation extends AppCompatActivity {
                     .show();
         });
     }
-
     private void updateChefNode(String childName, String value) {
         equipesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -72,9 +71,11 @@ public class AssignementConfirmation extends AppCompatActivity {
                             chefSnapshot.getRef().child(childName).removeValue();
                             chefSnapshot.getRef().child("startDateTime").removeValue();
                             startActivity(new Intent(AssignementConfirmation.this, MainActivity.class));
+                            finish();
                         } else {
                             chefSnapshot.getRef().child(childName).setValue(value);
                             startActivity(new Intent(AssignementConfirmation.this, MainActivity.class));
+                            finish();
                         }
                         break;
                     }
@@ -83,7 +84,7 @@ public class AssignementConfirmation extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle error
+
             }
         });
     }
