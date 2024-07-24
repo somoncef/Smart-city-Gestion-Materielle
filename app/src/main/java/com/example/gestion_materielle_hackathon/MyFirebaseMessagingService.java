@@ -42,7 +42,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.putExtra("zone_name", zoneName); // Pass the zone name
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent;
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         String channelId = "default_channel_id";
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)

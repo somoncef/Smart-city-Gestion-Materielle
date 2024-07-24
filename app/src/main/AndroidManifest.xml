@@ -22,8 +22,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Gestion_Materielle_hackathon"
+        android:theme="@style/Base.Theme.Gestion_Materielle_hackathon"
         tools:targetApi="31">
+        <activity
+            android:name=".DemandeMateriel"
+            android:exported="false" />
+
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -38,6 +42,7 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="ASSIGNMENT_CONFIRMATION_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

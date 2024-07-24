@@ -46,6 +46,7 @@ public class AssignementConfirmation extends AppCompatActivity {
 
         bAccept.setOnClickListener(v -> {
             String currentDateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            updateChefNode("assignedZone", zoneName);
             updateChefNode("startDateTime", currentDateTime);
         });
 
@@ -72,9 +73,11 @@ public class AssignementConfirmation extends AppCompatActivity {
                             chefSnapshot.getRef().child(childName).removeValue();
                             chefSnapshot.getRef().child("startDateTime").removeValue();
                             startActivity(new Intent(AssignementConfirmation.this, MainActivity.class));
+                            finish();
                         } else {
                             chefSnapshot.getRef().child(childName).setValue(value);
                             startActivity(new Intent(AssignementConfirmation.this, MainActivity.class));
+                            finish();
                         }
                         break;
                     }
