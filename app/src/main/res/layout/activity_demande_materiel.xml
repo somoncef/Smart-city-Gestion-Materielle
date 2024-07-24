@@ -43,20 +43,13 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Détails du Projet -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Détails du Projet"
-                android:textColor="@android:color/white"
-                android:textStyle="bold" />
+
 
             <EditText
                 android:id="@+id/et_emplacement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Emplacement des Travaux"
+                android:hint="Adresse du lampadaire"
                 android:textColorHint="@color/white"
                 android:backgroundTint="@color/white" />
 
@@ -64,17 +57,21 @@
                 android:id="@+id/et_date_debut"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date de Début des Travaux"
+                android:hint="Date de Début "
                 android:textColorHint="@color/white"
-                android:backgroundTint="@color/white" />
+                android:drawableEnd="@drawable/baseline_calendar_month_24"
+                android:backgroundTint="@color/white"
+                android:inputType="none" />
 
             <EditText
                 android:id="@+id/et_date_fin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Date Prévue de Fin des Travaux"
+                android:hint="Date Prévue de Fin "
                 android:textColorHint="@color/white"
-                android:backgroundTint="@color/white" />
+                android:drawableEnd="@drawable/baseline_calendar_month_24"
+                android:backgroundTint="@color/white"
+                android:inputType="none" />
 
             <EditText
                 android:id="@+id/et_description"
