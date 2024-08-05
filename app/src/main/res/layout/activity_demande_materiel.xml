@@ -51,6 +51,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Adresse du lampadaire"
                 android:textColorHint="@color/white"
+                android:textColor="@color/white"
                 android:backgroundTint="@color/white" />
 
             <EditText
@@ -59,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Date de Début "
                 android:textColorHint="@color/white"
+                android:textColor="@color/white"
                 android:drawableEnd="@drawable/baseline_calendar_month_24"
                 android:backgroundTint="@color/white"
                 android:inputType="none" />
@@ -67,6 +69,8 @@
                 android:id="@+id/et_date_fin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
+
                 android:hint="Date Prévue de Fin "
                 android:textColorHint="@color/white"
                 android:drawableEnd="@drawable/baseline_calendar_month_24"
@@ -77,6 +81,8 @@
                 android:id="@+id/et_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
+
                 android:hint="Description des Travaux"
                 android:textColorHint="@color/white"
                 android:backgroundTint="@color/white" />
@@ -113,6 +119,7 @@
                         android:layout_weight="1"
                         android:textColor="@color/grey_text"
                         android:hint="Nom du Matériel"
+
                         android:textColorHint="@color/white"
                         android:backgroundTint="@color/white" />
                     <EditText
@@ -143,7 +150,7 @@
             <Button
                 android:id="@+id/btn_add_material"
                 android:text="Ajouter Matériel"
-                android:textColor="@android:color/white"
+                android:textColor="@color/dark_blue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp" />
@@ -154,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Justification de la Demande"
+
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -162,6 +170,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Justification"
+                android:textColor="@color/white"
+
                 android:textColorHint="@color/white"
                 android:backgroundTint="@color/white" />
 

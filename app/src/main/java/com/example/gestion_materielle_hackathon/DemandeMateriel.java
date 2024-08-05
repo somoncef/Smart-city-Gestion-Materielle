@@ -26,6 +26,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.gestion_materielle_hackathon.model.Demande;
 import com.example.gestion_materielle_hackathon.model.Material;
+import com.example.gestion_materielle_hackathon.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -222,7 +224,7 @@ public class DemandeMateriel extends AppCompatActivity {
         Demande demande = new Demande(emplacement, dateDebut, dateFin, description, materials, justification, urgence);
 
         // Save the demande to Firebase
-        saveDemandeToFirebase(demande);
+        fetchCurrentUserAndSaveDemande(demande);
     }
 
     private boolean validateRequiredFields() {
@@ -264,11 +266,36 @@ public class DemandeMateriel extends AppCompatActivity {
 
         return isValid;
     }
+
+    private void fetchCurrentUserAndSaveDemande(Demande demande) {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference usersReference = FirebaseDatabase.getInstance().getReference("users");
+
+        usersReference.child(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User currentUser = dataSnapshot.getValue(User.class);
+                if (currentUser != null) {
+                    demande.setChef(currentUser);
+                    saveDemandeToFirebase(demande);
+                } else {
+                    Toast.makeText(DemandeMateriel.this, "Failed to fetch current user's information.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(DemandeMateriel.this, "Failed to fetch current user's information.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void saveDemandeToFirebase(Demande demande) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("demands");
         String demandeId = databaseReference.push().getKey(); // Generate a unique key for the new demande
 
         if (demandeId != null) {
+            demande.setId(demandeId); // Set the id of the demande
             databaseReference.child(demandeId).setValue(demande)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(DemandeMateriel.this, "Demande saved successfully.", Toast.LENGTH_SHORT).show();

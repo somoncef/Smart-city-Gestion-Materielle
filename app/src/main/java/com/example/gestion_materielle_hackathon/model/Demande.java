@@ -3,6 +3,9 @@ package com.example.gestion_materielle_hackathon.model;
 import java.util.List;
 
 public class Demande {
+    private User chef; // Add this line
+
+    private String id;
     private String emplacement;
     private String dateDebut;
     private String dateFin;
@@ -13,6 +16,14 @@ public class Demande {
 
     public Demande() {
         // Default constructor required for calls to DataSnapshot.getValue(Demande.class)
+    }
+
+    public User getChef() {
+        return chef;
+    }
+
+    public void setChef(User chef) {
+        this.chef = chef;
     }
 
     public Demande(String emplacement, String dateDebut, String dateFin, String description,
@@ -28,6 +39,14 @@ public class Demande {
 
     public String getEmplacement() {
         return emplacement;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setEmplacement(String emplacement) {
